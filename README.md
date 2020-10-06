@@ -30,6 +30,13 @@ the source code:
 $ make
 ```
 
+Install the `gcc` package if you get a message about
+"plugin needed to handle lto object":
+
+```sh
+$ sudo apt install gcc
+```
+
 You can override CFLAGS if desired. After having compiled the source code,
 the plug-in can be installed to `~/.weechat/plugins/` by executing:
 
