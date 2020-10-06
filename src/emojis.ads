@@ -14,11 +14,13 @@
 --  See the License for the specific language governing permissions and
 --  limitations under the License.
 
-with WeeChat;
+with Ada.Strings.Unbounded;
 
 package Emojis is
 
-   use WeeChat;
+   package SU renames Ada.Strings.Unbounded;
+
+   function "+" (Value : String) return SU.Unbounded_String renames SU.To_Unbounded_String;
 
    type Text_One_Point_Pair is record
       Text    : SU.Unbounded_String;

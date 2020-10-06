@@ -1,4 +1,5 @@
 with "weechat";
+
 with "config";
 
 library project Weechat_Emoji is
@@ -17,7 +18,8 @@ library project Weechat_Emoji is
    for Library_Kind use "relocatable";
 
    --  Stand-alone library
-   for Library_Interface use ("plugin");
+   for Library_Interface use ("plugin_emoji");
+   for Library_Standalone use "encapsulated";
 
    package Ide renames Config.Ide;
    package Builder renames Config.Builder;

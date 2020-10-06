@@ -14,13 +14,17 @@
 --  See the License for the specific language governing permissions and
 --  limitations under the License.
 
+with System;
+
+with Interfaces.C;
+
 with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
 
 with WeeChat;
 
 with Emojis;
 
-package body Plugin is
+package body Plugin_Emoji is
 
    use WeeChat;
 
@@ -52,7 +56,7 @@ package body Plugin is
    end Replace_Text;
 
    function On_Print_Modifier
-     (Data          : Void_Ptr;
+     (Plugin        : Plugin_Ptr;
       Modifier      : String;
       Modifier_Data : String;
       Text          : String) return String
@@ -120,7 +124,7 @@ package body Plugin is
    end Replace_Slice;
 
    function On_Input_Text_Content_Modifier
-     (Data          : Void_Ptr;
+     (Plugin        : Plugin_Ptr;
       Modifier      : String;
       Modifier_Data : String;
       Text          : String) return String
@@ -150,43 +154,80 @@ package body Plugin is
    end On_Input_Text_Content_Modifier;
 
    function On_Emoji_Completion
-     (Data       : Void_Ptr;
+     (Plugin     : Plugin_Ptr;
       Item       : String;
       Buffer     : Buffer_Ptr;
       Completion : Completion_Ptr) return Callback_Result is
    begin
       for Pair of Emojis.Name_Emojis_2 loop
-         Add_Completion_Word (Completion, ":" & (+Pair.Text) & ":");
+         Add_Completion_Word (Plugin, Completion, ":" & (+Pair.Text) & ":");
       end loop;
 
       for Pair of Emojis.Name_Emojis_1 loop
-         Add_Completion_Word (Completion, ":" & (+Pair.Text) & ":");
+         Add_Completion_Word (Plugin, Completion, ":" & (+Pair.Text) & ":");
       end loop;
 
       return OK;
    end On_Emoji_Completion;
 
-   procedure Plugin_Initialize is
-      Option : constant Config_Option := Get_Config_Option ("weechat.completion.default_template");
+   procedure Plugin_Initialize (Plugin : Plugin_Ptr) is
+      Option : constant Config_Option :=
+        Get_Config_Option (Plugin, "weechat.completion.default_template");
    begin
-      On_Modifier ("weechat_print", On_Print_Modifier'Access);
-      On_Modifier ("input_text_content", On_Input_Text_Content_Modifier'Access);
+      On_Modifier (Plugin, "weechat_print", On_Print_Modifier'Access);
+      On_Modifier (Plugin, "input_text_content", On_Input_Text_Content_Modifier'Access);
 
-      On_Completion ("emoji_names", "Complete :emoji:", On_Emoji_Completion'Access);
+      On_Completion (Plugin, "emoji_names", "Complete :emoji:", On_Emoji_Completion'Access);
 
-      if SF.Index (Option.Value, "emoji_names") = 0 then
+      if SF.Index (WeeChat.Value (Option), "emoji_names") = 0 then
          declare
-            Result : constant Option_Set := Option.Set (Option.Value & "|%(emoji_names)");
+            Result : constant Option_Set := Set (Option, WeeChat.Value (Option) & "|%(emoji_names)");
          begin
             pragma Assert (Result /= Error);
          end;
       end if;
    end Plugin_Initialize;
 
-   procedure Plugin_Finalize is null;
+   procedure Plugin_Finalize (Plugin : Plugin_Ptr) is null;
 
-begin
-   WeeChat.Register
-     ("emoji", "onox", "Displays emoji with Ada 2012", "1.0", "Apache-2.0",
-      Plugin_Initialize'Access, Plugin_Finalize'Access);
-end Plugin;
+   Plugin_Name : constant C_String := "emoji" & L1.NUL
+     with Export, Convention => C, External_Name => "weechat_plugin_name";
+
+   Plugin_Author : constant C_String := "onox" & L1.NUL
+     with Export, Convention => C, External_Name => "weechat_plugin_author";
+
+   Plugin_Description : constant C_String := "Displays emojis with Ada 2012" & L1.NUL
+     with Export, Convention => C, External_Name => "weechat_plugin_description";
+
+   Plugin_Version : constant C_String := "1.0" & L1.NUL
+     with Export, Convention  => C, External_Name => "weechat_plugin_version";
+
+   Plugin_License : constant C_String := "Apache-2.0" & L1.NUL
+     with Export, Convention => C, External_Name => "weechat_plugin_license";
+
+   Plugin_API_Version : constant String := WeeChat.Plugin_API_Version
+     with Export, Convention => C, External_Name => "weechat_plugin_api_version";
+
+   function Plugin_Init
+     (Object : Plugin_Ptr;
+      Argc   : Interfaces.C.int;
+      Argv   : System.Address) return Callback_Result
+   with Export, Convention => C, External_Name => "weechat_plugin_init";
+
+   function Plugin_End (Object : Plugin_Ptr) return Callback_Result
+     with Export, Convention => C, External_Name => "weechat_plugin_end";
+
+   function Plugin_Init
+     (Object : Plugin_Ptr;
+      Argc   : Interfaces.C.int;
+      Argv   : System.Address) return Callback_Result is
+   begin
+      return Plugin_Init (Object, Plugin_Initialize'Access);
+   end Plugin_Init;
+
+   function Plugin_End (Object : Plugin_Ptr) return Callback_Result is
+   begin
+      return Plugin_End (Object, Plugin_Finalize'Access);
+   end Plugin_End;
+
+end Plugin_Emoji;
