@@ -181,7 +181,8 @@ package body Plugin_Emoji is
 
       if SF.Index (WeeChat.Value (Option), "emoji_names") = 0 then
          declare
-            Result : constant Option_Set := Set (Option, WeeChat.Value (Option) & "|%(emoji_names)");
+            Result : constant Option_Set :=
+              Set (Option, WeeChat.Value (Option) & "|%(emoji_names)");
          begin
             pragma Assert (Result /= Error);
          end;
