@@ -1,3 +1,4 @@
+[![Build status](https://github.com/onox/weechat-emoji/actions/workflows/build.yaml/badge.svg)](https://github.com/onox/weechat-emoji/actions/workflows/build.yaml)
 [![License](https://img.shields.io/github/license/onox/weechat-emoji.svg?color=blue)](https://github.com/onox/weechat-emoji/blob/master/LICENSE)
 [![Alire crate](https://img.shields.io/endpoint?url=https://alire.ada.dev/badges/weechat_emoji.json)](https://alire.ada.dev/crates/weechat_emoji.html)
 [![GitHub release](https://img.shields.io/github/release/onox/weechat-emoji.svg)](https://github.com/onox/weechat-emoji/releases/latest)
