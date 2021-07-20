@@ -3,6 +3,7 @@
 [![Alire crate](https://img.shields.io/endpoint?url=https://alire.ada.dev/badges/weechat_emoji.json)](https://alire.ada.dev/crates/weechat_emoji.html)
 [![GitHub release](https://img.shields.io/github/release/onox/weechat-emoji.svg)](https://github.com/onox/weechat-emoji/releases/latest)
 [![IRC](https://img.shields.io/badge/IRC-%23ada%20on%20libera.chat-orange.svg)](https://libera.chat)
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/ada-lang/Lobby)
 
 # weechat-emoji
 
