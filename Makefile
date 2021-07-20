@@ -1,19 +1,13 @@
-CFLAGS  ?= -O2 -march=native
-
-GNATMAKE = gprbuild -dm -p
-GNATCLEAN = gprclean -q
-GNATINSTALL = gprinstall
-
-.PHONY: all debug clean
+.PHONY: all debug clean install uninstall
 
 all:
-	$(GNATMAKE) -P tools/weechat_emoji.gpr -cargs $(CFLAGS)
+	alr build
 
 debug:
-	$(GNATMAKE) -P tools/weechat_emoji.gpr -XMode=debug -cargs $(CFLAGS)
+	alr build -XWEECHAT_EMOJI_BUILD_MODE=debug -XWEECHAT_ADA_BUILD_MODE=debug
 
 clean:
-	$(GNATCLEAN) -P tools/weechat_emoji.gpr
+	alr clean
 	rm -rf build
 
 install:

@@ -1,4 +1,5 @@
 [![License](https://img.shields.io/github/license/onox/weechat-emoji.svg?color=blue)](https://github.com/onox/weechat-emoji/blob/master/LICENSE)
+[![Alire crate](https://img.shields.io/endpoint?url=https://alire.ada.dev/badges/weechat_emoji.json)](https://alire.ada.dev/crates/weechat_emoji.html)
 [![GitHub release](https://img.shields.io/github/release/onox/weechat-emoji.svg)](https://github.com/onox/weechat-emoji/releases/latest)
 [![IRC](https://img.shields.io/badge/IRC-%23ada%20on%20freenode-orange.svg)](https://webchat.freenode.net/?channels=ada)
 
@@ -7,19 +8,27 @@
 A [WeeChat][url-weechat] plug-in written in Ada 2012 that displays
 emoji.
 
+Uses the [weechat-ada][url-weechat-ada] bindings.
+
 ## Dependencies
 
 In order to build the plug-in, you need to have:
 
  * An Ada 2012 compiler
 
- * GPRBuild and `make`
-
- * [weechat-ada][url-weechat-ada]
+ * [Alire][url-alire]
+ 
+ * `make`
 
 ## Installing dependencies on Ubuntu 18.04 LTS
 
-Build and install [weechat-ada][url-weechat-ada].
+Install the dependencies using apt:
+
+```
+$ sudo apt install gnat-7 gprbuild make
+```
+
+and then install Alire.
 
 ## Installation
 
@@ -37,7 +46,7 @@ Install the `gcc` package if you get a message about
 $ sudo apt install gcc
 ```
 
-You can override CFLAGS if desired. After having compiled the source code,
+After having compiled the source code,
 the plug-in can be installed to `~/.weechat/plugins/` by executing:
 
 ```
@@ -57,6 +66,7 @@ refers to this license:
 
     SPDX-License-Identifier: Apache-2.0
 
+  [url-alire]: https://alire.ada.dev/
   [url-apache]: https://opensource.org/licenses/Apache-2.0
   [url-contributing]: /CONTRIBUTING.md
   [url-weechat]: https://weechat.org/
