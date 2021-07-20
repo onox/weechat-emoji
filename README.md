@@ -1,7 +1,7 @@
 [![License](https://img.shields.io/github/license/onox/weechat-emoji.svg?color=blue)](https://github.com/onox/weechat-emoji/blob/master/LICENSE)
 [![Alire crate](https://img.shields.io/endpoint?url=https://alire.ada.dev/badges/weechat_emoji.json)](https://alire.ada.dev/crates/weechat_emoji.html)
 [![GitHub release](https://img.shields.io/github/release/onox/weechat-emoji.svg)](https://github.com/onox/weechat-emoji/releases/latest)
-[![IRC](https://img.shields.io/badge/IRC-%23ada%20on%20freenode-orange.svg)](https://webchat.freenode.net/?channels=ada)
+[![IRC](https://img.shields.io/badge/IRC-%23ada%20on%20libera.chat-orange.svg)](https://libera.chat)
 
 # weechat-emoji
 
