@@ -9,5 +9,7 @@ authors = ["onox"]
 maintainers = ["onox <denkpadje@gmail.com>"]
 maintainers-logins = ["onox"]
 
+configuration.disabled = true
+
 [[depends-on]]
 weechat_ada = "^2.0.1"
