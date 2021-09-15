@@ -1,4 +1,5 @@
 with "weechat_ada";
+with "emojis";
 
 project Weechat_Emoji is
 

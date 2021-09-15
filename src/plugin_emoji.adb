@@ -18,8 +18,6 @@ with System;
 
 with Interfaces.C;
 
-with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
-
 with WeeChat;
 
 with Emojis;
@@ -27,130 +25,24 @@ with Emojis;
 package body Plugin_Emoji is
 
    use WeeChat;
-
-   package UTF renames Ada.Strings.UTF_Encoding;
-
-   function Unicode (Number : Long_Integer) return UTF.UTF_8_String is
-     (UTF.Wide_Wide_Strings.Encode ("" & Wide_Wide_Character'Val (Number)));
-
-   function Unicode (Number_1, Number_2 : Long_Integer) return UTF.UTF_8_String is
-     (UTF.Wide_Wide_Strings.Encode
-        (Wide_Wide_Character'Val (Number_1) &
-         Wide_Wide_Character'Val (Number_2)));
-
-   procedure Replace_Text
-     (Modified_Text : in out SU.Unbounded_String;
-      Pair          : Emojis.Text_One_Point_Pair)
-   is
-      Text  : constant String := +Pair.Text;
-      Emoji : constant UTF.UTF_8_String := Unicode (Pair.Point_1);
-   begin
-      loop
-         declare
-            Index : constant Natural := SU.Index (Modified_Text, Text);
-         begin
-            exit when Index = 0;
-            SU.Replace_Slice (Modified_Text, Index, Index + Text'Length - 1, Emoji);
-         end;
-      end loop;
-   end Replace_Text;
+   use type SU.Unbounded_String;
 
    function On_Print_Modifier
      (Plugin        : Plugin_Ptr;
       Modifier      : String;
       Modifier_Data : String;
-      Text          : String) return String
-   is
-      Modified_Text : SU.Unbounded_String := +Text;
+      Text          : String) return String is
    begin
-      for Pair of Emojis.Text_Emojis loop
-         Replace_Text (Modified_Text, Pair);
-      end loop;
-      for Pair of Emojis.Lower_Case_Text_Emojis loop
-         Replace_Text (Modified_Text, Pair);
-      end loop;
-      return +Modified_Text;
+      return Emojis.Replace (Text);
    end On_Print_Modifier;
-
-   use type SU.Unbounded_String;
-
-   procedure Replace_Slice
-     (Text          : in out SU.Unbounded_String;
-      Is_Completion : Boolean)
-   is
-      Text_List : constant String_List := Split (+Text, Separator => ":");
-      Result    : SU.Unbounded_String;
-   begin
-      for Index in Text_List'Range loop
-         if Index mod 2 = 0 then
-            declare
-               Found : Boolean := False;
-               Slice : constant String := +Text_List (Index);
-            begin
-               if Index < Text_List'Last and not Is_Completion then
-                  for Pair of Emojis.Name_Emojis_2 loop
-                     if Pair.Text = Slice then
-                        SU.Append (Result, Unicode (Pair.Point_1, Pair.Point_2) & " ");
-                        Found := True;
-                        exit;
-                     end if;
-                  end loop;
-
-                  if not Found then
-                     for Pair of Emojis.Name_Emojis_1 loop
-                        if Pair.Text = Slice then
-                           SU.Append (Result, Unicode (Pair.Point_1));
-                           Found := True;
-                           exit;
-                        end if;
-                     end loop;
-                  end if;
-               end if;
-
-               if not Found then
-                  if Index = Text_List'Last then
-                     SU.Append (Result, ":" & Slice);
-                  else
-                     SU.Append (Result, ":" & Slice & ":");
-                  end if;
-               end if;
-            end;
-         else
-            SU.Append (Result, Text_List (Index));
-         end if;
-      end loop;
-
-      Text := Result;
-   end Replace_Slice;
 
    function On_Input_Text_Content_Modifier
      (Plugin        : Plugin_Ptr;
       Modifier      : String;
       Modifier_Data : String;
-      Text          : String) return String
-   is
-      Slices : String_List := Split (Text, Separator => " ");
-
-      Is_Space : constant Boolean := Slices (Slices'Last) = "";
+      Text          : String) return String is
    begin
-      for Index in Slices'Range loop
-         declare
-            Is_Completion : constant Boolean := Index = Slices'Last - 1 and Is_Space;
-         begin
-            Replace_Slice (Slices (Index), Index = Slices'Last or Is_Completion);
-
-            for Pair of Emojis.Text_Emojis loop
-               Replace_Text (Slices (Index), Pair);
-            end loop;
-            if Index < Slices'Last and not Is_Completion then
-               for Pair of Emojis.Lower_Case_Text_Emojis loop
-                  Replace_Text (Slices (Index), Pair);
-               end loop;
-            end if;
-         end;
-      end loop;
-
-      return Join (Slices, " ");
+      return Emojis.Replace (Text, Completions => Emojis.Lower_Case_Text_Emojis);
    end On_Input_Text_Content_Modifier;
 
    function On_Emoji_Completion
@@ -159,12 +51,8 @@ package body Plugin_Emoji is
       Buffer     : Buffer_Ptr;
       Completion : Completion_Ptr) return Callback_Result is
    begin
-      for Pair of Emojis.Name_Emojis_2 loop
-         Add_Completion_Word (Plugin, Completion, ":" & (+Pair.Text) & ":");
-      end loop;
-
-      for Pair of Emojis.Name_Emojis_1 loop
-         Add_Completion_Word (Plugin, Completion, ":" & (+Pair.Text) & ":");
+      for Label of Emojis.Labels loop
+         Add_Completion_Word (Plugin, Completion, ":" & (+Label) & ":");
       end loop;
 
       return OK;
