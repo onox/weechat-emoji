@@ -1,10 +1,7 @@
-.PHONY: all debug clean install uninstall
+.PHONY: all clean install uninstall
 
 all:
-	alr build
-
-debug:
-	alr build -XWEECHAT_EMOJI_BUILD_MODE=debug -XWEECHAT_ADA_BUILD_MODE=debug
+	alr build --validation
 
 clean:
 	alr clean
