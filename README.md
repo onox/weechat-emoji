@@ -22,16 +22,6 @@ In order to build the plug-in, you need to have:
  
  * `make`
 
-## Installing dependencies on Ubuntu 18.04 LTS
-
-Install the dependencies using apt:
-
-```
-$ sudo apt install gnat-7 gprbuild make
-```
-
-and then install Alire.
-
 ## Installation
 
 A Makefile is provided to build the source code. Use `make` to build
@@ -39,13 +29,6 @@ the source code:
 
 ```
 $ make
-```
-
-Install the `gcc` package if you get a message about
-"plugin needed to handle lto object":
-
-```sh
-$ sudo apt install gcc
 ```
 
 After having compiled the source code,
