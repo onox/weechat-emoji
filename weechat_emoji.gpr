@@ -23,8 +23,7 @@ project Weechat_Emoji is
    for Library_Standalone use "encapsulated";
 
    package Compiler is
-      for Default_Switches ("Ada") use Weechat_Emoji_Config.Ada_Compiler_Switches &
-        ("-gnatyM99");
+      for Default_Switches ("Ada") use Weechat_Emoji_Config.Ada_Compiler_Switches;
       for Local_Configuration_Pragmas use "gnat.adc";
    end Compiler;
 
